@@ -1,0 +1,66 @@
+{
+  
+  "loginTitle": "Iniciar Sesión",
+  "usernameLabel": "Usuario",
+  "passwordLabel": "Contraseña",
+  "loginButton": "Iniciar Sesión",
+  "noAccount": "¿No tienes una cuenta? Regístrate",
+
+  "search": "Buscar...",
+  "pets": "Mascotas",
+  "appointments": "Citas",
+  "mainTitle": "PRINCIPAL",
+  "home": "Inicio",
+  "adminTitle": "ADMINISTRACIÓN",
+  "users": "Usuarios",
+  "statistics": "Estadísticas",
+  "userTitle": "USUARIO",
+  "profile": "Perfil",
+  "myPets": "Mis Mascotas",
+  "logout": "Cerrar Sesión",
+
+  "editButton": "Editar",
+  "profileTitle": "Perfil",
+  "usernameLabelField": "Usuario:",
+
+  "myPetsTitle": "Mis Mascotas",
+  "actionHeader": "Acción",
+  "editAction": "Editar",
+  "deleteAction": "Eliminar",
+  "petDeletedSuccess": "Mascota eliminada exitosamente",
+  "deletePetTitle": "¿Eliminar mascota?",
+  "deletePetDesc": "¿Estás seguro de eliminar el registro?",
+  "cancelButton": "Cancelar",
+  "deleteButton": "Eliminar",
+
+  "editPetTitle": "Editar Mascota",
+  "petNameLabel": "Nombre",
+  "petTypeLabel": "Tipo",
+  "noneOption": "------------ ninguno ------------",
+  "petUpdatedSuccess": "Mascota actualizada exitosamente",
+  "saveButton": "Guardar",
+
+  "unauthorizedTitle": "No autorizado",
+  "unauthorizedDesc": "No tienes autorización para ver esta página",
+
+  "editUserTitle": "Editar Usuario",
+  "firstNameLabel": "Nombre",
+  "lastNameLabel": "Apellido",
+  "roleAdminLabel": "¿Rol de Administrador?",
+  "userUpdatedSuccess": "Usuario actualizado exitosamente",
+
+  "usersTitle": "Usuarios",
+  "idHeader": "Id",
+  "firstNameHeader": "Nombre",
+  "lastNameHeader": "Apellido",
+  "usernameHeader": "Usuario",
+  "petsOfUserTitle": "Mascotas del Usuario",
+  "petNameHeader": "Nombre",
+  "petTypeHeader": "Tipo",
+
+  "signupTitle": "Registro",
+  "signupButton": "Registrarse",
+  "signupSuccess": "Registro exitoso",
+  "alreadyHaveAccount": "¿Ya tienes una cuenta? Inicia sesión"
+}
+

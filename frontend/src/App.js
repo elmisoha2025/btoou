@@ -1,4 +1,4 @@
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DarkModeContext } from "./context/darkModeContext";
 import Login from "./pages/auth/Login";
@@ -20,56 +20,73 @@ import "./style/dark.scss";
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
+  // Estado global del idioma (Español por defecto o recuperado de localStorage)
+  const [lang, setLang] = useState(() => {
+    return localStorage.getItem("app_lang") || "es";
+  });
+
+  // Función para cambiar el idioma y guardarlo de forma persistente
+  const handleSetLang = (newLang) => {
+    setLang(newLang);
+    localStorage.setItem("app_lang", newLang);
+  };
+
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Fragment>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            {/* Rutas Públicas */}
+            <Route path="/login" element={<Login currentLang={lang} />} />
+            <Route path="/signup" element={<Signup currentLang={lang} />} />
 
-            <Route path="unauthorized" element={<PrivateRoute />}>
-              <Route index element={<Unauthorized />} />
-            </Route>
+           <Route path="unauthorized" element={<PrivateRoute />}>
+            <Route index element={<Unauthorized currentLang={lang} setCurrLang={handleSetLang} />} />
+          </Route>
 
+            {/* Rutas Privadas / Home */}
             <Route path="/" element={<PrivateRoute />}>
-              <Route index element={<Home />} />
-              <Route path="home" element={<Home />} />
+              <Route index element={<Home currentLang={lang} setCurrLang={handleSetLang} />} />
+              <Route path="home" element={<Home currentLang={lang} setCurrLang={handleSetLang} />} />
             </Route>
 
+            {/* Rutas de Mascotas */}
             <Route path="pets" element={<PrivateRoute />}>
               <Route element={<RoleAccess roles={["ROLE_USER"]} />} >
-                <Route index element={<ListPet />} />
+                <Route index element={<ListPet currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
               <Route element={<RoleAccess roles={["ROLE_USER"]} />} >
-                <Route path="new" element={<NewPet />} />
+                <Route path="new" element={<NewPet currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
               <Route element={<RoleAccess roles={["ROLE_USER"]} />} >
-                <Route path="edit" element={<EditPet />} />
+                <Route path="edit" element={<EditPet currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
             </Route>
 
+            {/* Rutas de Perfil */}
             <Route path="profile" element={<PrivateRoute />}>
               <Route element={<RoleAccess roles={["ROLE_USER"]} />} >
-                <Route index element={<Profile />} />
+                <Route index element={<Profile currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
               <Route element={<RoleAccess roles={["ROLE_USER"]} />} >
-                <Route path="edit" element={<EditProfile />} />
+                <Route path="edit" element={<EditProfile currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
             </Route>
 
-            <Route path="users" element={<PrivateRoute />}>
-              <Route element={<RoleAccess roles={["ROLE_ADMIN"]} />} >
-                <Route index element={<ListUser />} />
-              </Route>
-              <Route element={<RoleAccess roles={["ROLE_ADMIN"]} />}>
-                <Route path="edit" element={<EditUser />} />
-              </Route>
+            {/* Rutas de Usuarios (Admin) */}
+           <Route path="users" element={<PrivateRoute />}>
+            <Route element={<RoleAccess roles={["ROLE_ADMIN"]} />} >
+              <Route index element={<ListUser currentLang={lang} setCurrLang={handleSetLang} />} />
             </Route>
+            <Route element={<RoleAccess roles={["ROLE_ADMIN"]} />}>
+              <Route path="edit" element={<EditUser currentLang={lang} setCurrLang={handleSetLang} />} />
+            </Route>
+          </Route>
 
+            {/* Rutas de Estadísticas (Admin) */}
             <Route path="statistics" element={<PrivateRoute />}>
               <Route element={<RoleAccess roles={["ROLE_ADMIN"]} />} >
-                <Route index element={<Statistic />} />
+                <Route index element={<Statistic currentLang={lang} setCurrLang={handleSetLang} />} />
               </Route>
             </Route>
 

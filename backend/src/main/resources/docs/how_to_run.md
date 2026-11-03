@@ -30,7 +30,7 @@ In order to run the application in development mode, apply the following steps:
 2. Open command prompt window and clone the project from GitHub using the following command:
 
 ```shell
-git clone https://github.com/yildizmy/pet-clinic.git
+git clone https://github.com/elmisoha/btoou.git
 ```
 <br/>
 
@@ -39,7 +39,7 @@ git clone https://github.com/yildizmy/pet-clinic.git
 3. Change the current directory to the project directory where the `docker-compose.yml` file is in:
 
 ```shell
-cd pet-clinic
+cd btoou
 ```
 <br/>
 
@@ -73,7 +73,7 @@ Then close the dialog and run the application.
 6. Open another command prompt window/tab and change the current directory to the frontend project:
 
 ```shell
-cd pet-clinic/frontend
+cd btoou/frontend
 ```
 <br/>
 
@@ -123,21 +123,21 @@ In order to run the application in production mode, apply the following steps:
 2. Open command prompt window and clone the project from GitHub using the following command:
 
 ```shell
-git clone https://github.com/yildizmy/pet-clinic.git
+git clone https://github.com/elmisoha/btoou.git
 ```
 <br/>
 
 3. Change the current directory to the project directory where the `docker-compose.yml` file is in:
 
 ```shell
-cd pet-clinic
+cd btoou
 ```
 <br/>
 
 4. Run the following command:
 
 > **Warning** <br/>
-> Before running this command, if exists, delete previously composed containers (`db`, `backend`, `frontend`), images (`pet-clinic-backend`, `pet-clinic-frontend`) and volumes (`pet-clinic_db-data`) belonging to the application. 
+> Before running this command, if exists, delete previously composed containers (`db`, `backend`, `frontend`), images (`btoou-backend`, `btoou-frontend`) and volumes (`btoou_db-data`) belonging to the application. 
 On the other hand, if the app is running on IntelliJ IDEA, stop it to prevent a possible port error. 
 
 ```shell

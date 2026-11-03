@@ -1,8 +1,7 @@
-version: '3.8'
 
 services:
   frontend:
-    container_name: pet-clinic-frontend
+    container_name: btoou-frontend
     build: ./frontend
     restart: always
     env_file: ./.env
@@ -19,7 +18,7 @@ services:
         max-file: '5'
 
   backend:
-    container_name: pet-clinic-backend
+    container_name: btoou-backend
     build: ./backend
     env_file: ./.env
     restart: always

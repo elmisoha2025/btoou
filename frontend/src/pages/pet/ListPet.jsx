@@ -16,13 +16,26 @@ import AuthService from "../../services/AuthService";
 import HttpService from "../../services/HttpService";
 import { petColumns } from "./fields";
 
-const ListPet = () => {
-  const pageTitle = "My Pets";
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
+
+
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang y setCurrLang como props
+const ListPet = ({ currentLang, setCurrLang }) => {
   const navigate = useNavigate();
   const [id, setId] = useState();
   const [data, setData] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
 
   useEffect(() => {
     fetchData();
@@ -67,7 +80,7 @@ const ListPet = () => {
       .then((res) => {
         fetchData();
         setOpen(false);
-        enqueueSnackbar("Pet is deleted successfully", { variant: "success" });
+        enqueueSnackbar(t.petDeletedSuccess|| "Pet is deleted successfully", { variant: "success" });
       })
       .catch((error) => {
         if (error.response?.data?.errors) {
@@ -82,26 +95,25 @@ const ListPet = () => {
       });
   };
 
+  // Traducción de la columna de acciones dentro de la tabla
   const actionColumn = [
     {
       field: "action",
-      headerName: "Action",
+      headerName: t.actionHeader || "Action",
       headerAlign: "left",
       align: "left",
       width: 150,
-      // flex: 0,
-
       renderCell: (params) => {
         return (
           <div className="cellAction">
             <div className="editButton" onClick={() => handleEdit(params)}>
-              Edit
+              {t.editAction || "Edit"}
             </div>
             <div
               className="deleteButton"
               onClick={() => handleClickOpen(params.row.id)}
             >
-              Delete
+              {t.deleteAction || "Delete"}
             </div>
           </div>
         );
@@ -111,11 +123,12 @@ const ListPet = () => {
 
   return (
     <div className="list">
-      <Sidebar />
+      {/* Pasamos el idioma al Sidebar y Navbar */}
+      <Sidebar currentLang={currentLang} />
       <div className="listContainer">
-        <Navbar />
+        <Navbar currentLang={currentLang} setCurrLang={setCurrLang} />
         <Datatable
-          title={pageTitle}
+          title={t.myPetsTitle || "My Pets"}
           userColumns={petColumns}
           actionColumn={actionColumn}
           data={data}
@@ -128,16 +141,16 @@ const ListPet = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete pet?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t.deletePetTitle || "Delete pet?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure to delete record?
+            {t.deletePetDesc || "Are you sure to delete record?"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>{t.cancelButton || "Cancel"}</Button>
           <Button onClick={handleDelete} autoFocus>
-            Delete
+            {t.deleteButton || "Delete"}
           </Button>
         </DialogActions>
       </Dialog>

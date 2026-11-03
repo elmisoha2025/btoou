@@ -5,12 +5,25 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import AuthService from "../../services/AuthService";
 import HttpService from "../../services/HttpService";
+
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
 import "./profile.scss";
 
-const Profile = () => {
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang y setCurrLang como props
+const Profile = ({ currentLang, setCurrLang }) => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [user, setUser] = useState("currentUser");
+  const [user, setUser] = useState({});
+
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
 
   useEffect(() => {
     const userId = AuthService.getCurrentUser()?.id;
@@ -29,7 +42,7 @@ const Profile = () => {
           enqueueSnackbar(error.message, { variant: "error" });
         }
       });
-  }, []);
+  }, [enqueueSnackbar]);
 
   const handleEdit = () => {
     navigate("/profile/edit", { state: user });
@@ -37,15 +50,22 @@ const Profile = () => {
 
   return (
     <div className="single">
-      <Sidebar />
+      {/* Pasamos currentLang al Sidebar */}
+      <Sidebar currentLang={currentLang} />
+      
       <div className="singleContainer">
-        <Navbar />
+        {/* Pasamos currentLang y setCurrLang al Navbar */}
+        <Navbar currentLang={currentLang} setCurrLang={setCurrLang} />
+        
         <div className="top">
           <div className="left">
             <div className="editButton" onClick={() => handleEdit()}>
-              Edit
+              {t.editButton || "Edit"}
             </div>
-            <h1 className="title">Profile</h1>
+            
+            {/* Título traducido */}
+            <h1 className="title">{t.profileTitle || "Profile"}</h1>
+            
             <div className="item">
               <img
                 src={`${process.env.PUBLIC_URL}/profile.png`}
@@ -55,7 +75,8 @@ const Profile = () => {
               <div className="details">
                 <h1 className="itemTitle">{user.fullName}</h1>
                 <div className="detailItem">
-                  <span className="itemKey">Username:</span>
+                  {/* Etiqueta de Username traducida */}
+                  <span className="itemKey">{t.usernameLabelField || "Username:"}</span>
                   <span className="itemValue">{user.username}</span>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import {
   Button,
+  Dialog,
   FormControl,
   Grid,
   InputLabel,
@@ -14,27 +15,44 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import HttpService from "../../services/HttpService";
+
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
 import "./pet.scss";
 
-const EditPet = () => {
-  const pageTitle = "Edit Pet";
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang y setCurrLang como props
+const EditPet = ({ currentLang, setCurrLang }) => {
   const { state } = useLocation();
   const defaultValues = {
-    id: state.id,
-    name: state.name,
-    typeId: state.type.id,
-    userId: state.user.id,
+    id: state?.id || "",
+    name: state?.name || "",
+    typeId: state?.type?.id || "",
+    userId: state?.user?.id || "",
   };
+  
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState(defaultValues);
   const [types, setTypes] = useState([]);
 
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
+
   useEffect(() => {
     const getTypes = async () => {
-      const response = await HttpService.getWithAuth("/types");
-      const types = await response.data.content;
-      setTypes(types);
+      try {
+        const response = await HttpService.getWithAuth("/types");
+        const typesData = await response.data.content;
+        setTypes(typesData);
+      } catch (error) {
+        console.error("Error fetching types", error);
+      }
     };
     getTypes();
   }, []);
@@ -51,7 +69,7 @@ const EditPet = () => {
     event.preventDefault();
     HttpService.putWithAuth("/pets", formValues)
       .then((response) => {
-        enqueueSnackbar("Pet updated successfully", { variant: "success" });
+        enqueueSnackbar(t.petUpdatedSuccess || "Pet updated successfully", { variant: "success" });
         navigate("/pets");
       })
       .catch((error) => {
@@ -69,16 +87,18 @@ const EditPet = () => {
 
   return (
     <div className="single">
-      <Sidebar />
+      {/* Pasamos el idioma al Sidebar */}
+      <Sidebar currentLang={currentLang} />
       <div className="singleContainer">
-        <Navbar />
+        {/* Pasamos el idioma y la función para cambiarlo al Navbar */}
+        <Navbar currentLang={currentLang} setCurrLang={setCurrLang} />
         <div className="bottom">
-          <h1 className="title">{pageTitle}</h1>
+          {/* Título de la página traducido */}
+          <h1 className="title">{t.editPetTitle || "Edit Pet"}</h1>
           <form onSubmit={handleSubmit}>
             <Grid
               container
               alignItems="left"
-              justify="center"
               direction="column"
               spacing={2}
             >
@@ -89,7 +109,7 @@ const EditPet = () => {
                   required
                   id="name"
                   name="name"
-                  label="Name"
+                  label={t.petNameLabel || "Name"}
                   type="text"
                   value={formValues.name}
                   onChange={handleInputChange}
@@ -97,16 +117,16 @@ const EditPet = () => {
               </Grid>
               <Grid item>
                 <FormControl sx={{ width: 240 }}>
-                  <InputLabel id="demo-select-small">Type</InputLabel>
+                  <InputLabel id="demo-select-small">{t.petTypeLabel || "Type"}</InputLabel>
                   <Select
                     required
                     name="typeId"
-                    label="Type"
+                    label={t.petTypeLabel || "Type"}
                     value={formValues.typeId}
                     onChange={handleInputChange}
                   >
                     <MenuItem value="">
-                      <em>------------ none ------------</em>
+                      <em>{t.noneOption || "------------ none ------------"}</em>
                     </MenuItem>
                     {types.map((type) => (
                       <MenuItem key={type.id} value={type.id}>
@@ -123,10 +143,10 @@ const EditPet = () => {
                 variant="outlined"
                 onClick={() => navigate("/pets")}
               >
-                Cancel
+                {t.cancelButton || "Cancel"}
               </Button>
               <Button sx={{ minWidth: 112 }} type="submit" variant="contained">
-                Save
+                {t.saveButton || "Save"}
               </Button>
             </Stack>
           </form>

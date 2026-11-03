@@ -15,19 +15,31 @@ import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
+
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
 import "./auth.scss";
 
-const Login = () => {
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang como propiedad
+const Login = ({ currentLang }) => {
   const defaultValues = {
     username: "",
     password: "",
   };
 
-  const pageTitle = "Log in";
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const theme = createTheme();
   const [formValues, setFormValues] = useState(defaultValues);
+
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -89,20 +101,24 @@ const Login = () => {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
+            
+            {/* Título traducido */}
             <Typography component="h1" variant="h5">
-              {pageTitle}
+              {t.loginTitle || "Log in"}
             </Typography>
+
             <Box
               component="form"
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
+              {/* Campo Usuario traducido */}
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                label="Username"
+                label={t.usernameLabel || "Usuario"}
                 id="username"
                 name="username"
                 autoComplete="username"
@@ -110,11 +126,13 @@ const Login = () => {
                 onChange={handleInputChange}
                 autoFocus
               />
+              
+              {/* Campo Contraseña traducido */}
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                label="Password"
+                label={t.passwordLabel || "Contraseña"}
                 name="password"
                 type="password"
                 id="password"
@@ -122,6 +140,8 @@ const Login = () => {
                 value={formValues.password}
                 onChange={handleInputChange}
               />
+
+              {/* Botón traducido */}
               <Button
                 type="submit"
                 fullWidth
@@ -131,12 +151,13 @@ const Login = () => {
                   formValues.username === "" || formValues.password === ""
                 }
               >
-                Sign In
+                {t.loginButton || "Iniciar Sesión"}
               </Button>
+
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="/signup" variant="body2">
-                    Don't have an account? Sign up
+                    {t.noAccount || "Don't have an account? Sign up"}
                   </Link>
                 </Grid>
               </Grid>

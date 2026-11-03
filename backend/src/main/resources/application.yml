@@ -1,6 +1,6 @@
 spring:
   application:
-    name: pet-clinic
+    name: btoou
   main:
     banner-mode: console
   banner:

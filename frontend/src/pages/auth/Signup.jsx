@@ -13,9 +13,19 @@ import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
+
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
 import "./auth.scss";
 
-const Signup = () => {
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang como prop
+const Signup = ({ currentLang }) => {
   const defaultValues = {
     firstName: "",
     lastName: "",
@@ -24,12 +34,14 @@ const Signup = () => {
     roles: [],
   };
 
-  const pageTitle = "Sign up";
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const theme = createTheme();
   const [adminRole, setAdminRole] = useState(false);
   const [formValues, setFormValues] = useState(defaultValues);
+
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -51,7 +63,7 @@ const Signup = () => {
     event.preventDefault();
     AuthService.signup(formValues)
       .then((response) => {
-        enqueueSnackbar("Signed up successfully", { variant: "success" });
+        enqueueSnackbar(t.signupSuccess || "Signed up successfully", { variant: "success" });
         navigate("/login");
       })
       .catch((error) => {
@@ -100,9 +112,12 @@ const Signup = () => {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
+            
+            {/* Título traducido */}
             <Typography component="h1" variant="h5">
-              {pageTitle}
+              {t.signupTitle || "Sign up"}
             </Typography>
+
             <Box
               component="form"
               noValidate
@@ -113,7 +128,7 @@ const Signup = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     autoComplete="given-name"
-                    label="First Name"
+                    label={t.firstNameLabel || "First Name"}
                     name="firstName"
                     required
                     fullWidth
@@ -127,7 +142,7 @@ const Signup = () => {
                   <TextField
                     required
                     fullWidth
-                    label="Last Name"
+                    label={t.lastNameLabel || "Last Name"}
                     id="lastName"
                     name="lastName"
                     autoComplete="family-name"
@@ -139,7 +154,7 @@ const Signup = () => {
                   <TextField
                     required
                     fullWidth
-                    label="Username"
+                    label={t.usernameLabel || "Username"}
                     id="username"
                     name="username"
                     autoComplete="username"
@@ -151,27 +166,31 @@ const Signup = () => {
                   <TextField
                     required
                     fullWidth
-                    label="Password"
+                    label={t.passwordLabel || "Password"}
                     name="password"
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    value={formValues.password}
                     onChange={handleInputChange}
                   />
                 </Grid>
               </Grid>
+
+              {/* Botón de Registro traducido */}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign up
+                {t.signupButton || "Sign up"}
               </Button>
+
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="/login" variant="body2">
-                    Already have an account? Sign in
+                    {t.alreadyHaveAccount || "Already have an account? Sign in"}
                   </Link>
                 </Grid>
               </Grid>

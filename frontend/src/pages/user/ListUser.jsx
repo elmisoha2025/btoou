@@ -18,12 +18,24 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import HttpService from "../../services/HttpService";
+
+// 1. Importas tus archivos de traducción
+import esTranslations from "../../locales/es.json";
+import enTranslations from "../../locales/en.json";
 import "./user.scss";
 
-const ListUser = () => {
-  const pageTitle = "Users";
+const translations = {
+  es: esTranslations,
+  en: enTranslations
+};
+
+// 2. Recibes currentLang y setCurrLang como props
+const ListUser = ({ currentLang, setCurrLang }) => {
   const [rows, setRows] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+
+  // 3. Seleccionas el diccionario activo (por defecto 'es')
+  const t = translations[currentLang || "es"];
 
   useEffect(() => {
     fetchData();
@@ -51,29 +63,35 @@ const ListUser = () => {
 
   return (
     <div className="single">
-      <Sidebar />
+      {/* Pasamos currentLang al Sidebar */}
+      <Sidebar currentLang={currentLang} />
+      
       <div className="singleContainer">
-        <Navbar />
+        {/* Pasamos currentLang y setCurrLang al Navbar */}
+        <Navbar currentLang={currentLang} setCurrLang={setCurrLang} />
+        
         <div className="bottom">
-          <h1 className="title">{pageTitle}</h1>
+          {/* Título traducido */}
+          <h1 className="title">{t.usersTitle || "Users"}</h1>
+          
           <div className="listContainer">
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
                     <TableCell style={{ width: 30 }} />
-                    <TableCell style={{ width: 100 }}>Id</TableCell>
-                    <TableCell style={{ flex: 1 }}>First Name</TableCell>
-                    <TableCell style={{ flex: 1 }}>Last Name</TableCell>
-                    <TableCell style={{ flex: 1 }}>Username</TableCell>
+                    <TableCell style={{ width: 100 }}>{t.idHeader || "Id"}</TableCell>
+                    <TableCell style={{ flex: 1 }}>{t.firstNameHeader || "First Name"}</TableCell>
+                    <TableCell style={{ flex: 1 }}>{t.lastNameHeader || "Last Name"}</TableCell>
+                    <TableCell style={{ flex: 1 }}>{t.usernameHeader || "Username"}</TableCell>
                     <TableCell style={{ flex: 0, width: 100 }}>
-                      Action
+                      {t.actionHeader || "Action"}
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-                    <Row key={row.id} row={row} />
+                    <Row key={row.id} row={row} currentLang={currentLang} />
                   ))}
                 </TableBody>
               </Table>
@@ -88,22 +106,24 @@ const ListUser = () => {
 export default ListUser;
 
 function Row(props) {
-  const { row } = props;
+  const { row, currentLang } = props;
   const [open, setOpen] = useState(false);
   const [pets, setPets] = useState([]);
   const [id, setId] = useState();
   const navigate = useNavigate();
-  const pageTitle = "Pets of the User";
   const { enqueueSnackbar } = useSnackbar();
 
+  // Diccionario local para el componente Row
+  const t = translations[currentLang || "es"];
+
   useEffect(() => {
-    if (open) {
+    if (open && id) {
       HttpService.getWithAuth("/pets/users/" + id)
         .then((response) => {
           setPets(response.data);
         })
         .catch((error) => {
-          if (error.response.status === 404) {
+          if (error.response?.status === 404) {
             setPets([]);
           } else if (error.response?.data?.errors) {
             error.response?.data?.errors.map((e) =>
@@ -118,15 +138,15 @@ function Row(props) {
           }
         });
     }
-  }, [open]);
+  }, [open, id]);
 
-  const handleExpand = (id) => {
-    setId(id);
+  const handleExpand = (userId) => {
+    setId(userId);
     setOpen(!open);
   };
 
-  const handleEdit = (row) => {
-    navigate("/users/edit", { state: row });
+  const handleEdit = (rowData) => {
+    navigate("/users/edit", { state: rowData });
   };
 
   return (
@@ -155,7 +175,7 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row">
           <div className="editButton" onClick={() => handleEdit(row)}>
-            Edit
+            {t.editAction || "Edit"}
           </div>
         </TableCell>
       </TableRow>
@@ -163,14 +183,15 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
+              {/* Título de la tabla expandida traducido */}
               <h1 className="title" style={{ marginBottom: 0, paddingTop: 10 }}>
-                {pageTitle}
+                {t.petsOfUserTitle || "Pets of the User"}
               </h1>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Type</TableCell>
+                    <TableCell>{t.petNameHeader || "Name"}</TableCell>
+                    <TableCell>{t.petTypeHeader || "Type"}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
